@@ -25,7 +25,7 @@ void ofxFFTLive::setup() {
     soundStream->setup(this,                   // callback obj.
                        0,                      // out channels.
                        1,                      // in channels.
-                       44100,                  // sample rate.
+                       getSampleRate(),                  // sample rate.
                        getBufferSize(),        // buffer size.
                        4);                     // number of buffers.
     this->soundStream = soundStream;

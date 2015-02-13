@@ -27,6 +27,7 @@ ofxFFTBase::ofxFFTBase() {
     
     bufferSize = 512; // default.
     binSize = (int)(bufferSize * 0.5);
+	sampleRate = 44100; // default
     
     initFFT();
     initAudioData(fftData, binSize);
@@ -263,6 +264,14 @@ int ofxFFTBase::getBufferSize() {
     return bufferSize;
 }
 
+void ofxFFTBase::setSampleRate(int value) {
+	sampleRate = value;
+}
+
+int ofxFFTBase::getSampleRate() {
+	return sampleRate;
+}
+
 void ofxFFTBase::setThreshold(float value) {
     value = ofClamp(value, 0, 1);
     fftData.cutThreshold = value;
@@ -272,8 +281,16 @@ float ofxFFTBase::getThreshold() {
     return fftData.cutThreshold;
 }
 
+float ofxFFTBase::getPeak() {
+	return fftData.peakValue;
+}
+
 float ofxFFTBase::getAveragePeak() {
     return fftData.peakAverage;
+}
+
+float ofxFFTBase::getBinFromFrequency(float frequency) {
+	return frequency * binSize / (sampleRate / 2);
 }
 
 void ofxFFTBase::setPeakDecay(float value) {

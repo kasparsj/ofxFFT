@@ -66,9 +66,13 @@ public:
     
     virtual void setBufferSize(int value);
     virtual int getBufferSize();
+	virtual void setSampleRate(int value);
+	virtual int getSampleRate();
     virtual void setThreshold(float value);
     virtual float getThreshold();
+	virtual float getPeak();
     virtual float getAveragePeak();
+	virtual float getBinFromFrequency(float frequency);
     virtual void setPeakDecay(float value);
     virtual float getPeakDecay();
     virtual void setMaxDecay(float value);
@@ -88,6 +92,7 @@ public:
     
     int bufferSize;
     int binSize;
+	int sampleRate;
     float * buffer;
     float * magnitudes;
     float * magnitudesDB;
