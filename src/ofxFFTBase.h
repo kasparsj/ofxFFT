@@ -73,6 +73,8 @@ public:
 	virtual float getPeak();
     virtual float getAveragePeak();
 	virtual float getBinFromFrequency(float frequency);
+	virtual float getRangePeak(float startFreq, float endFreq);
+	virtual float getRangeAveragePeak(float startFreq, float endFreq);
     virtual void setPeakDecay(float value);
     virtual float getPeakDecay();
     virtual void setMaxDecay(float value);

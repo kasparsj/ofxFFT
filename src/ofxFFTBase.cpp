@@ -293,6 +293,31 @@ float ofxFFTBase::getBinFromFrequency(float frequency) {
 	return frequency * binSize / (sampleRate / 2);
 }
 
+float ofxFFTBase::getRangePeak(float startFreq, float endFreq) {
+	int startBin = getBinFromFrequency(startFreq);
+	int endBin = getBinFromFrequency(endFreq);
+	float peak = fftData.dataPeak[startBin];
+	for (int i = startBin; i < endBin; i++) {
+		if (fftData.dataPeak[i] > peak) {
+			peak = fftData.dataPeak[i];
+		}
+	}
+	return peak;
+}
+
+float ofxFFTBase::getRangeAveragePeak(float startFreq, float endFreq) {
+	int startBin = getBinFromFrequency(startFreq);
+	int endBin = getBinFromFrequency(endFreq);
+	if (endBin > startBin) {
+		float sum = 0;
+		for (int i = startBin; i < endBin; i++) {
+			sum += fftData.dataPeak[i];
+		}
+		return sum/(endBin - startBin);
+	}
+	return fftData.dataPeak[startBin];
+}
+
 void ofxFFTBase::setPeakDecay(float value) {
     value = ofClamp(value, 0, 1);
     fftData.peakDecay = value;
