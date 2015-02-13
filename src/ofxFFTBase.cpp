@@ -285,37 +285,33 @@ float ofxFFTBase::getPeak() {
 	return fftData.peakValue;
 }
 
+float ofxFFTBase::getPeak(int startBin, int endBin) {
+	float peakValue = fftData.dataPeak[startBin];
+	for (int i = startBin; i < endBin; i++) {
+		if (fftData.dataPeak[i] > peakValue) {
+			peakValue = fftData.dataPeak[i];
+		}
+	}
+	return peakValue;
+}
+
 float ofxFFTBase::getAveragePeak() {
     return fftData.peakAverage;
 }
 
-float ofxFFTBase::getBinFromFrequency(float frequency) {
-	return frequency * binSize / (sampleRate / 2);
-}
-
-float ofxFFTBase::getRangePeak(float startFreq, float endFreq) {
-	int startBin = getBinFromFrequency(startFreq);
-	int endBin = getBinFromFrequency(endFreq);
-	float peak = fftData.dataPeak[startBin];
-	for (int i = startBin; i < endBin; i++) {
-		if (fftData.dataPeak[i] > peak) {
-			peak = fftData.dataPeak[i];
-		}
-	}
-	return peak;
-}
-
-float ofxFFTBase::getRangeAveragePeak(float startFreq, float endFreq) {
-	int startBin = getBinFromFrequency(startFreq);
-	int endBin = getBinFromFrequency(endFreq);
+float ofxFFTBase::getAveragePeak(int startBin, int endBin) {
 	if (endBin > startBin) {
-		float sum = 0;
+		float averagePeak = 0;
 		for (int i = startBin; i < endBin; i++) {
-			sum += fftData.dataPeak[i];
+			averagePeak += fftData.dataPeak[i];
 		}
-		return sum/(endBin - startBin);
+		return averagePeak/(endBin - startBin);
 	}
 	return fftData.dataPeak[startBin];
+}
+
+float ofxFFTBase::getBinFromFrequency(float frequency) {
+	return ofClamp(frequency, 0, OFX_FFT_MAX_FREQ) * binSize / (sampleRate / 2);
 }
 
 void ofxFFTBase::setPeakDecay(float value) {
@@ -361,24 +357,36 @@ const vector<int> & ofxFFTBase::getGlitchData() {
 }
 
 void ofxFFTBase::getFftData(float * data, int length) {
+	getFftData(data, length, 0, (binSize - 1));
+}
+
+void ofxFFTBase::getFftData(float * data, int length, int startBin, int endBin) {
     for(int i=0; i<length; i++) {
-        int j = (int)((i / (float)(length - 1)) * (binSize - 1));
+        int j = (int)(startBin + (i / (float)(length - 1)) * (endBin - startBin));
         float v  = fftData.dataNorm[j];
         data[i] = v;
     }
 }
 
 void ofxFFTBase::getFftPeakData(float * data, int length) {
+	getFftPeakData(data, length, 0, (binSize - 1));
+}
+
+void ofxFFTBase::getFftPeakData(float * data, int length, int startBin, int endBin) {
     for(int i=0; i<length; i++) {
-        int j = (int)((i / (float)(length - 1)) * (binSize - 1));
+        int j = (int)(startBin + (i / (float)(length - 1)) * (endBin - startBin));
         float v  = fftData.dataPeak[j];
         data[i] = v;
     }
 }
 
 void ofxFFTBase::getGlitchData(int * data, int length) {
+	getGlitchData(data, length, 0, (binSize - 1));
+}
+
+void ofxFFTBase::getGlitchData(int * data, int length, int startBin, int endBin) {
     for(int i=0; i<length; i++) {
-        int j = (int)((i / (float)(length - 1)) * (binSize - 1));
+        int j = (int)(startBin + (i / (float)(length - 1)) * (endBin - startBin));
         float v  = fftData.dataCut[j];
         data[i] = v;
     }

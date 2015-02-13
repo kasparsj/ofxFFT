@@ -15,6 +15,7 @@ class fft;
 
 #define OFX_FFT_WIDTH           512
 #define OFX_FFT_HEIGHT          256
+#define OFX_FFT_MAX_FREQ		20400
 
 struct ofxFFTData {
     int size;
@@ -71,10 +72,10 @@ public:
     virtual void setThreshold(float value);
     virtual float getThreshold();
 	virtual float getPeak();
-    virtual float getAveragePeak();
+	virtual float getPeak(int startBin, int endBin);
+	virtual float getAveragePeak();
+    virtual float getAveragePeak(int startBin, int endBin);
 	virtual float getBinFromFrequency(float frequency);
-	virtual float getRangePeak(float startFreq, float endFreq);
-	virtual float getRangeAveragePeak(float startFreq, float endFreq);
     virtual void setPeakDecay(float value);
     virtual float getPeakDecay();
     virtual void setMaxDecay(float value);
@@ -85,10 +86,13 @@ public:
     virtual const vector<float> & getFftNormData();
     virtual const vector<float> & getFftPeakData();
     virtual const vector<int> & getGlitchData();
-    
-    virtual void getFftData(float *data, int length);
-    virtual void getFftPeakData(float *data, int length);
+	
+	virtual void getFftData(float * data, int length);
+	virtual void getFftPeakData(float *data, int length);
     virtual void getGlitchData(int * data, int length);
+    virtual void getFftData(float *data, int length, int startBin, int endBin);
+    virtual void getFftPeakData(float *data, int length, int startBin, int endBin);
+    virtual void getGlitchData(int * data, int length, int startBin, int endBin);
     
     fft * _fft;
     
